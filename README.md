@@ -1,2 +1,95 @@
-# finalproject_stoyalovsky_konstantin_M25-555
-A platform for tracking and simulating currency trading!
+# ValutaTrade Hub
+
+### Описание
+Это комплексная платформа, которая позволяет пользователям регистрироваться, управлять своим виртуальным портфелем фиатных и криптовалют, совершать сделки по покупке/продаже, а также отслеживать актуальные курсы в реальном времени. Система состоит из двух основных сервисов:
+1. Сервис Парсинга (Parser Service): Отдельное приложение, которое по запросу или расписанию обращается к публичным API, получает актуальные курсы, сравнивает их с предыдущими значениями и сохраняет историю в базу данных.
+2. Основной Сервис (Core Service): Главное приложение, которое предоставляет пользовательский интерфейс (CLI), управляет пользователями, их кошельками, историей транзакций и взаимодействует с сервисом парсинга для получения актуальных курсов.
+
+---
+
+### Архитектура проекта
+
+#### Парсинг
+- Автоматически собирает курсы валют с публичных API
+- Поддерживает CoinGecko (криптовалюты) и ExchangeRate-API (фиатные валюты)
+- Сохраняет исторические данные и актуальные курсы в JSON-хранилище
+
+#### Основное
+- CLI-интерфейс для взаимодействия с пользователем
+- Управление пользователями и их портфелями
+- Бизнес-логика торговых операций
+- Интеграция с сервисом парсинга для получения курсов
+
+#### Структура проекта
+
+```
+finalproject_stoyalovsky_konstantin_M25-555/
+├── data/                       # Хранилище данных
+│   ├── users.json              # Пользователи
+│   ├── portfolios.json         # Портфели и кошельки
+│   ├── rates.json              # Актуальные курсы (кеш)
+│   └── exchange_rates.json     # Исторические данные парсера
+├── valutatrade_hub/            # Основной пакет
+│   ├── decorators.py           # Декораторы
+│   └── logging_config.py       # Логирование
+│   ├── core/                   # Ядро системы
+│   │   ├── currencies.py       # Классы валют
+│   │   ├── models.py           # Модели данных
+│   │   ├── usecases.py         # Бизнес-логика
+│   │   ├── utils.py            # Вспомогательные функции
+│   │   └── exceptions.py       # Пользовательские исключения
+│   ├── infra/                  # Инфраструктура
+│   │   ├── settings.py         # Конфигурация
+│   │   └── database.py         # Управление хранилищем
+│   ├── parser_service/         # Сервис парсинга
+│   │   ├── api_clients.py      # Клиенты внешних API
+│   │   ├── updater.py          # Логика обновления курсов
+│   │   ├── config.py           # Конфигурация
+│   │   └── storage.py          # Хранилище курсов
+│   └── cli/                    # Командный интерфейс
+│       └── interface.py        # CLI интерфейс
+├── main.py                     # Главный файл
+├── pyproject.toml              # Poetry
+├── Makefile                    # Makefile
+└── README.md                   # Документация
+```
+
+---
+
+### Управление
+```
+Доступные команды:
+<command>  register --username <имя> --password <пароль>
+<command>  login --username <имя> --password <пароль>
+<command>  show-portfolio [--base <валюта>]
+<command>  buy --currency <код> --amount <сумма>
+<command>  sell --currency <код> --amount <сумма>
+<command>  get-rate --from <валюта> --to <валюта>
+<command>  update-rates [--source <coingecko|exchangerate>]
+<command>  show-rates [--currency <код>] [--top <N>]
+<command>  list-currencies
+<command>  help
+<command>  exit
+```
+
+Поддерживаемые валюты:
+- Фиатные валюты: `USD`, `EUR`, `GBP`, `RUB`, `JPY`.
+- Криптовалюты: `BTC (Bitcoin)`, `ETH (Ethereum)`, `LTC (Litecoin)`, `ADA (Cardano)`.
+
+---
+
+### Демонстрация
+
+[![asciicast](https://asciinema.org/a/EQKqF3LA2QplooE1.svg)](https://asciinema.org/a/EQKqF3LA2QplooE1)
+
+---
+
+### Технологии
+Python 3.12.10
+
+### Установка и запуск
+- make install
+- make project
+
+### Автор
+Стояловский Константин
