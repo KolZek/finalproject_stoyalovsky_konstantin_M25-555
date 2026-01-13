@@ -190,5 +190,197 @@
       "request_ms": 0,
       "status_code": 200
     }
+  },
+  {
+    "id": "BTC_USD_2026-01-13T22:39:51.367631",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 93992,
+    "timestamp": "2026-01-13T22:39:51.367649",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2026-01-13T22:39:51.369837",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 3208.22,
+    "timestamp": "2026-01-13T22:39:51.369857",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "LTC_USD_2026-01-13T22:39:51.371395",
+    "from_currency": "LTC",
+    "to_currency": "USD",
+    "rate": 76.97,
+    "timestamp": "2026-01-13T22:39:51.371403",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ADA_USD_2026-01-13T22:39:51.371974",
+    "from_currency": "ADA",
+    "to_currency": "USD",
+    "rate": 0.407664,
+    "timestamp": "2026-01-13T22:39:51.371980",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "EUR_USD_2026-01-13T22:39:52.024374",
+    "from_currency": "EUR",
+    "to_currency": "USD",
+    "rate": 0.8566,
+    "timestamp": "2026-01-13T22:39:52.024382",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "GBP_USD_2026-01-13T22:39:52.025049",
+    "from_currency": "GBP",
+    "to_currency": "USD",
+    "rate": 0.7428,
+    "timestamp": "2026-01-13T22:39:52.025056",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "RUB_USD_2026-01-13T22:39:52.025834",
+    "from_currency": "RUB",
+    "to_currency": "USD",
+    "rate": 78.5337,
+    "timestamp": "2026-01-13T22:39:52.025839",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "JPY_USD_2026-01-13T22:39:52.026536",
+    "from_currency": "JPY",
+    "to_currency": "USD",
+    "rate": 157.9877,
+    "timestamp": "2026-01-13T22:39:52.026542",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "BTC_USD_2026-01-13T22:43:46.464941",
+    "from_currency": "BTC",
+    "to_currency": "USD",
+    "rate": 94015,
+    "timestamp": "2026-01-13T22:43:46.464958",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ETH_USD_2026-01-13T22:43:46.466498",
+    "from_currency": "ETH",
+    "to_currency": "USD",
+    "rate": 3206.45,
+    "timestamp": "2026-01-13T22:43:46.466504",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "LTC_USD_2026-01-13T22:43:46.467294",
+    "from_currency": "LTC",
+    "to_currency": "USD",
+    "rate": 76.97,
+    "timestamp": "2026-01-13T22:43:46.467299",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "ADA_USD_2026-01-13T22:43:46.467921",
+    "from_currency": "ADA",
+    "to_currency": "USD",
+    "rate": 0.407771,
+    "timestamp": "2026-01-13T22:43:46.467926",
+    "source": "COINGECKO",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "EUR_USD_2026-01-13T22:43:46.666375",
+    "from_currency": "EUR",
+    "to_currency": "USD",
+    "rate": 0.8566,
+    "timestamp": "2026-01-13T22:43:46.666385",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "GBP_USD_2026-01-13T22:43:46.667291",
+    "from_currency": "GBP",
+    "to_currency": "USD",
+    "rate": 0.7428,
+    "timestamp": "2026-01-13T22:43:46.667298",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "RUB_USD_2026-01-13T22:43:46.668323",
+    "from_currency": "RUB",
+    "to_currency": "USD",
+    "rate": 78.5337,
+    "timestamp": "2026-01-13T22:43:46.668330",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
+  },
+  {
+    "id": "JPY_USD_2026-01-13T22:43:46.669266",
+    "from_currency": "JPY",
+    "to_currency": "USD",
+    "rate": 157.9877,
+    "timestamp": "2026-01-13T22:43:46.669272",
+    "source": "EXCHANGERATE",
+    "meta": {
+      "request_ms": 0,
+      "status_code": 200
+    }
   }
 ]

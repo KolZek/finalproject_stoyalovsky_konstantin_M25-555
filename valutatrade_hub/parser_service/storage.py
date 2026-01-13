@@ -18,23 +18,26 @@ class RatesStorage:
 
     def save_current_rates(self, rates: Dict[str, float], source: str):
         """Сохранение текущих курсов в rates.json."""
-        current_data = {
-            "pairs": {},
-            "last_refresh": datetime.now().isoformat()
-        }
+        current_data = {"pairs": {}, "last_refresh": datetime.now().isoformat()}
 
         for pair, rate in rates.items():
             current_data["pairs"][pair] = {
                 "rate": rate,
                 "updated_at": datetime.now().isoformat(),
-                "source": source
+                "source": source,
             }
 
-        with open(self.config.RATES_FILE_PATH, 'w', encoding='utf-8') as f:
+        with open(self.config.RATES_FILE_PATH, "w", encoding="utf-8") as f:
             json.dump(current_data, f, indent=2, ensure_ascii=False)
 
-    def save_historical_record(self, from_currency: str, to_currency: str,
-                              rate: float, source: str, meta: dict = None):
+    def save_historical_record(
+        self,
+        from_currency: str,
+        to_currency: str,
+        rate: float,
+        source: str,
+        meta: dict = None,
+    ):
         """Сохранение в exchange_rates.json."""
         record = {
             "id": f"{from_currency}_{to_currency}_{datetime.now().isoformat()}",
@@ -43,13 +46,13 @@ class RatesStorage:
             "rate": rate,
             "timestamp": datetime.now().isoformat(),
             "source": source,
-            "meta": meta or {}
+            "meta": meta or {},
         }
 
         historical_data = self.load_historical_data()
         historical_data.append(record)
 
-        with open(self.config.HISTORY_FILE_PATH, 'w', encoding='utf-8') as f:
+        with open(self.config.HISTORY_FILE_PATH, "w", encoding="utf-8") as f:
             json.dump(historical_data, f, indent=2, ensure_ascii=False)
 
     def load_historical_data(self) -> List[dict]:
@@ -58,7 +61,7 @@ class RatesStorage:
             return []
 
         try:
-            with open(self.config.HISTORY_FILE_PATH, 'r', encoding='utf-8') as f:
+            with open(self.config.HISTORY_FILE_PATH, "r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, FileNotFoundError):
             return []
@@ -69,7 +72,7 @@ class RatesStorage:
             return {"pairs": {}, "last_refresh": None}
 
         try:
-            with open(self.config.RATES_FILE_PATH, 'r', encoding='utf-8') as f:
+            with open(self.config.RATES_FILE_PATH, "r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, FileNotFoundError):
             return {"pairs": {}, "last_refresh": None}

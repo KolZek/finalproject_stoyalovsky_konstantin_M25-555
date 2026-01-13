@@ -13,11 +13,11 @@ class RatesUpdater:
     def __init__(self):
         self.config = ParserConfig()
         self.storage = RatesStorage(self.config)
-        self.logger = logging.getLogger('parser')
+        self.logger = logging.getLogger("parser")
 
         self.clients = {
             "coingecko": CoinGeckoClient(self.config),
-            "exchangerate": ExchangeRateApiClient(self.config)
+            "exchangerate": ExchangeRateApiClient(self.config),
         }
 
     def run_update(self, source: str = None) -> Dict[str, float]:
@@ -38,13 +38,18 @@ class RatesUpdater:
                 all_rates.update(rates)
 
                 for pair, rate in rates.items():
-                    from_currency, to_currency = pair.split('_')
+                    from_currency, to_currency = pair.split("_")
                     self.storage.save_historical_record(
-                        from_currency, to_currency, rate, client_name.upper(),
-                        {"request_ms": 0, "status_code": 200}
+                        from_currency,
+                        to_currency,
+                        rate,
+                        client_name.upper(),
+                        {"request_ms": 0, "status_code": 200},
                     )
 
-                self.logger.info(f"Успешно обновлено из {client_name}: {len(rates)} курсов")
+                self.logger.info(
+                    f"Успешно обновлено из {client_name}: {len(rates)} курсов"
+                )
 
             except ApiRequestError as e:
                 self.logger.error(f"Ошибка обновления из {client_name}: {e}")

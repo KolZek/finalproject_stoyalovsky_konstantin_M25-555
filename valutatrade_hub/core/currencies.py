@@ -81,7 +81,7 @@ class CryptoCurrency(Currency):
             mcap_str = f"{self.market_cap:.2e}"
         else:
             mcap_str = "N/A"
-        return f"[CRYPTO] {self.code} — {self.name} (Алгоритм: {self.algorithm}, Капитализация: {mcap_str})"
+        return f"[CRYPTO] {self.code} — {self.name} (Алгоритм: {self.algorithm}, Капитализация: {mcap_str})"  # noqa: E501
 
 
 _CURRENCY_REGISTRY: Dict[str, Currency] = {}

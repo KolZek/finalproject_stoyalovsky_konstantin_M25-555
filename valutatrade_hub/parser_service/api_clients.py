@@ -13,7 +13,7 @@ class BaseApiClient(ABC):
 
     def __init__(self, config: ParserConfig):
         self.config = config
-        self.logger = logging.getLogger('parser')
+        self.logger = logging.getLogger("parser")
 
     @abstractmethod
     def fetch_rates(self) -> Dict[str, float]:
@@ -40,7 +40,9 @@ class CoinGeckoClient(BaseApiClient):
         """Получаем курсы криптовалют."""
         self.logger.info("Получение курсов криптовалют с CoinGecko")
 
-        crypto_ids = [self.config.CRYPTO_ID_MAP[code] for code in self.config.CRYPTO_CURRENCIES]
+        crypto_ids = [
+            self.config.CRYPTO_ID_MAP[code] for code in self.config.CRYPTO_CURRENCIES
+        ]
         ids_param = ",".join(crypto_ids)
 
         url = f"{self.config.COINGECKO_URL}?ids={ids_param}&vs_currencies=usd"
@@ -74,13 +76,15 @@ class ExchangeRateApiClient(BaseApiClient):
             self.logger.warning("Ключ ExchangeRate-API не настроен")
             return {}
 
-        url = f"{self.config.EXCHANGERATE_API_URL}/{self.config.EXCHANGERATE_API_KEY}/latest/{self.config.BASE_CURRENCY}"
+        url = f"{self.config.EXCHANGERATE_API_URL}/{self.config.EXCHANGERATE_API_KEY}/latest/{self.config.BASE_CURRENCY}"  # noqa: E501
 
         try:
             data = self._make_request(url)
 
             if data.get("result") != "success":
-                raise ApiRequestError(f"Ошибка API: {data.get('error-type', 'Неизвестная ошибка')}")
+                raise ApiRequestError(
+                    f"Ошибка API: {data.get('error-type', 'Неизвестная ошибка')}"
+                )
 
             rates = {}
             conversion_rates = data.get("conversion_rates", {})

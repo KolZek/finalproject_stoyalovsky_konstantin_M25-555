@@ -27,7 +27,7 @@ class CLIInterface:
         try:
             user = self.user_manager.register_user(args.username, args.password)
             print(
-                f"<info> Пользователь '{user.username}' зарегистрирован (id={user.user_id})."
+                f"<info> Пользователь '{user.username}' зарегистрирован (id={user.user_id})."  # noqa: E501
             )
         except ValueError as e:
             print(f"<error> {e}")
@@ -53,7 +53,7 @@ class CLIInterface:
             base_currency = args.base.upper() if args.base else "USD"
 
             print(
-                f"<info> Портфель пользователя '{self.current_user.username}' (в {base_currency}):"
+                f"<info> Портфель пользователя '{self.current_user.username}' (в {base_currency}):"  # noqa: E501
             )
 
             if not portfolio.wallets:
@@ -68,14 +68,14 @@ class CLIInterface:
                 if currency_code == base_currency:
                     value = balance
                     print(
-                        f"  - {currency_code}: {balance:.2f} → {value:.2f} {base_currency}"
+                        f"  - {currency_code}: {balance:.2f} → {value:.2f} {base_currency}"  # noqa: E501
                     )
                 else:
                     rate = self.rate_service.get_rate(currency_code, base_currency)
                     if rate:
                         value = balance * rate
                         print(
-                            f"  - {currency_code}: {balance:.4f} → {value:.2f} {base_currency} (курс: {rate:.4f})"
+                            f"  - {currency_code}: {balance:.4f} → {value:.2f} {base_currency} (курс: {rate:.4f})"  # noqa: E501
                         )
                     else:
                         value = 0
@@ -108,12 +108,12 @@ class CLIInterface:
                 print(f"<info> По курсу: {result['rate']:.2f} USD/{result['currency']}")
                 if result["estimated_cost"]:
                     print(
-                        f"<info> Примерная стоимость: {result['estimated_cost']:,.2f} USD"
+                        f"<info> Примерная стоимость: {result['estimated_cost']:,.2f} USD"  # noqa: E501
                     )
 
             print("<info> Изменения в портфеле:")
             print(
-                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"
+                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"  # noqa: E501
             )
 
         except (CurrencyNotFoundError, ValueError) as e:
@@ -138,12 +138,12 @@ class CLIInterface:
                 print(f"<info> По курсу: {result['rate']:.2f} USD/{result['currency']}")
                 if result["estimated_revenue"]:
                     print(
-                        f"<info> Примерный доход: {result['estimated_revenue']:,.2f} USD"
+                        f"<info> Примерный доход: {result['estimated_revenue']:,.2f} USD"  # noqa: E501
                     )
 
             print("<info> Изменения в портфеле:")
             print(
-                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"
+                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"  # noqa: E501
             )
 
         except (CurrencyNotFoundError, InsufficientFundsError, ValueError) as e:
@@ -162,13 +162,13 @@ class CLIInterface:
                 updated_at = rates.get("last_refresh", "неизвестно")
 
                 print(
-                    f"<info> Курс {from_currency}→{to_currency}: {rate:.6f} (обновлено: {updated_at})"
+                    f"<info> Курс {from_currency}→{to_currency}: {rate:.6f} (обновлено: {updated_at})"  # noqa: E501
                 )
 
                 if rate != 0:
                     reverse_rate = 1.0 / rate
                     print(
-                        f"<info> Обратный курс {to_currency}→{from_currency}: {reverse_rate:.6f}"
+                        f"<info> Обратный курс {to_currency}→{from_currency}: {reverse_rate:.6f}"  # noqa: E501
                     )
             else:
                 print(f"<warning> Курс {from_currency}→{to_currency} недоступен.")
@@ -249,11 +249,11 @@ class CLIInterface:
                 sorted_pairs = sorted_pairs[: args.top]
 
             print(
-                f"<info> Курсы из кэша (обновлено: {current_data.get('last_refresh', 'неизвестно')}):"
+                f"<info> Курсы из кэша (обновлено: {current_data.get('last_refresh', 'неизвестно')}):"  # noqa: E501
             )
             for pair, data in sorted_pairs:
                 print(
-                    f"- {pair}: {data['rate']} (источник: {data.get('source', 'неизвестно')})"
+                    f"- {pair}: {data['rate']} (источник: {data.get('source', 'неизвестно')})"  # noqa: E501
                 )
 
         except Exception as e:

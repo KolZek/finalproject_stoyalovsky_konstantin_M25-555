@@ -19,12 +19,14 @@ class ParserConfig:
     BASE_CURRENCY: str = "USD"
     FIAT_CURRENCIES: tuple = ("EUR", "GBP", "RUB", "JPY")
     CRYPTO_CURRENCIES: tuple = ("BTC", "ETH", "LTC", "ADA")
-    CRYPTO_ID_MAP: Dict[str, str] = field(default_factory=lambda: {
-        "BTC": "bitcoin",
-        "ETH": "ethereum",
-        "LTC": "litecoin",
-        "ADA": "cardano",
-    })
+    CRYPTO_ID_MAP: Dict[str, str] = field(
+        default_factory=lambda: {
+            "BTC": "bitcoin",
+            "ETH": "ethereum",
+            "LTC": "litecoin",
+            "ADA": "cardano",
+        }
+    )
 
     RATES_FILE_PATH: str = "data/rates.json"
     HISTORY_FILE_PATH: str = "data/exchange_rates.json"
