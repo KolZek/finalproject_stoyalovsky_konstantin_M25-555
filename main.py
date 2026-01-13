@@ -4,6 +4,7 @@ from valutatrade_hub.logging_config import setup_logging
 
 def main():
     # print("Hello world!")
+    setup_logging()
 
     cli = CLIInterface()
     cli.run()

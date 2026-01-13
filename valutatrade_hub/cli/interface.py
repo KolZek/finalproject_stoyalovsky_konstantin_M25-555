@@ -314,22 +314,17 @@ class CLIInterface:
     def _print_help(self):
         """Справочная информация."""
         print("\nДоступные команды:")
-        print("  register --username <имя> --password <пароль>")
-        print("  login --username <имя> --password <пароль>")
-        print("  show-portfolio [--base <валюта>]")
-        print("  buy --currency <код> --amount <сумма>")
-        print("  sell --currency <код> --amount <сумма>")
-        print("  get-rate --from <валюта> --to <валюта>")
-        print("  update-rates [--source <coingecko|exchangerate>]")
-        print("  show-rates [--currency <код>] [--top <N>]")
-        print("  list-currencies")
-        print("  help")
-        print("  exit")
-        print("\nПримеры:")
-        print("  register --username alice --password 1234")
-        print("  buy --currency BTC --amount 0.05")
-        print("  get-rate --from USD --to BTC")
-        print("  update-rates --source coingecko")
+        print("<command>  register --username <имя> --password <пароль>")
+        print("<command>  login --username <имя> --password <пароль>")
+        print("<command>  show-portfolio [--base <валюта>]")
+        print("<command>  buy --currency <код> --amount <сумма>")
+        print("<command>  sell --currency <код> --amount <сумма>")
+        print("<command>  get-rate --from <валюта> --to <валюта>")
+        print("<command>  update-rates [--source <coingecko|exchangerate>]")
+        print("<command>  show-rates [--currency <код>] [--top <N>]")
+        print("<command>  list-currencies")
+        print("<command>  help")
+        print("<command>  exit")
 
     def run(self):
         """Запуск."""

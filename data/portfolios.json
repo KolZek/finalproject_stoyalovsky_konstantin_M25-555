@@ -1,0 +1,15 @@
+[
+  {
+    "user_id": 1,
+    "wallets": {
+      "RUB": {
+        "currency_code": "RUB",
+        "balance": 1000.0
+      },
+      "USD": {
+        "currency_code": "USD",
+        "balance": 50.0
+      }
+    }
+  }
+]
