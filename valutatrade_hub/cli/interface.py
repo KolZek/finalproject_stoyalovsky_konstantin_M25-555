@@ -2,9 +2,14 @@ import argparse
 import shlex
 from typing import Optional
 
+from ..core.currencies import get_all_currencies
+from ..core.exceptions import CurrencyNotFoundError, InsufficientFundsError
 from ..core.models import User
 from ..core.usecases import PortfolioManager, UserManager
 from ..core.utils import DataManager, ExchangeRateService
+from ..parser_service.config import ParserConfig
+from ..parser_service.storage import RatesStorage
+from ..parser_service.updater import RatesUpdater
 
 
 class CLIInterface:
@@ -14,12 +19,16 @@ class CLIInterface:
         self.user_manager = UserManager(self.data_manager)
         self.portfolio_manager = PortfolioManager(self.data_manager, self.rate_service)
         self.current_user: Optional[User] = None
+        self.rates_updater = RatesUpdater()
+        self.rates_storage = RatesStorage(ParserConfig())
 
     def register(self, args):
         """Создание нового пользователя."""
         try:
             user = self.user_manager.register_user(args.username, args.password)
-            print(f"Пользователь '{user.username}' зарегистрирован (id={user.user_id}).")
+            print(
+                f"Пользователь '{user.username}' зарегистрирован (id={user.user_id})."
+            )
         except ValueError as e:
             print(f"<error> {e}")
 
@@ -38,10 +47,14 @@ class CLIInterface:
             return
 
         try:
-            portfolio = self.portfolio_manager.get_user_portfolio(self.current_user.user_id)
-            base_currency = args.base.upper() if args.base else 'USD'
+            portfolio = self.portfolio_manager.get_user_portfolio(
+                self.current_user.user_id
+            )
+            base_currency = args.base.upper() if args.base else "USD"
 
-            print(f"<info> Портфель пользователя '{self.current_user.username}' (в {base_currency}):")
+            print(
+                f"<info> Портфель пользователя '{self.current_user.username}' (в {base_currency}):"
+            )
 
             if not portfolio.wallets:
                 print("<info> Портфель пуст.")
@@ -54,12 +67,16 @@ class CLIInterface:
 
                 if currency_code == base_currency:
                     value = balance
-                    print(f"  - {currency_code}: {balance:.2f} → {value:.2f} {base_currency}")
+                    print(
+                        f"  - {currency_code}: {balance:.2f} → {value:.2f} {base_currency}"
+                    )
                 else:
                     rate = self.rate_service.get_rate(currency_code, base_currency)
                     if rate:
                         value = balance * rate
-                        print(f"  - {currency_code}: {balance:.4f} → {value:.2f} {base_currency} (курс: {rate:.4f})")
+                        print(
+                            f"  - {currency_code}: {balance:.4f} → {value:.2f} {base_currency} (курс: {rate:.4f})"
+                        )
                     else:
                         value = 0
                         print(f"  - {currency_code}: {balance:.4f} → курс недоступен")
@@ -80,22 +97,26 @@ class CLIInterface:
 
         try:
             result = self.portfolio_manager.buy_currency(
-                self.current_user.user_id,
-                args.currency,
-                args.amount
+                self.current_user.user_id, args.currency, args.amount
             )
 
-            print(f"<info> Покупка завершена: {result['amount']:.4f} {result['currency']}")
+            print(
+                f"<info> Покупка завершена: {result['amount']:.4f} {result['currency']}"
+            )
 
-            if result['rate']:
+            if result["rate"]:
                 print(f"<info> По курсу: {result['rate']:.2f} USD/{result['currency']}")
-                if result['estimated_cost']:
-                    print(f"<info> Примерная стоимость: {result['estimated_cost']:,.2f} USD")
+                if result["estimated_cost"]:
+                    print(
+                        f"<info> Примерная стоимость: {result['estimated_cost']:,.2f} USD"
+                    )
 
             print("<info> Изменения в портфеле:")
-            print(f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}")
+            print(
+                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"
+            )
 
-        except Exception as e:
+        except (CurrencyNotFoundError, ValueError) as e:
             print(f"<error> {e}")
 
     def sell(self, args):
@@ -106,22 +127,26 @@ class CLIInterface:
 
         try:
             result = self.portfolio_manager.sell_currency(
-                self.current_user.user_id,
-                args.currency,
-                args.amount
+                self.current_user.user_id, args.currency, args.amount
             )
 
-            print(f"<info> Продажа завершена: {result['amount']:.4f} {result['currency']}")
+            print(
+                f"<info> Продажа завершена: {result['amount']:.4f} {result['currency']}"
+            )
 
-            if result['rate']:
+            if result["rate"]:
                 print(f"<info> По курсу: {result['rate']:.2f} USD/{result['currency']}")
-                if result['estimated_revenue']:
-                    print(f"<info> Примерный доход: {result['estimated_revenue']:,.2f} USD")
+                if result["estimated_revenue"]:
+                    print(
+                        f"<info> Примерный доход: {result['estimated_revenue']:,.2f} USD"
+                    )
 
             print("<info> Изменения в портфеле:")
-            print(f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}")
+            print(
+                f"  - {result['currency']}: было {result['old_balance']:.4f} → стало {result['new_balance']:.4f}"
+            )
 
-        except Exception as e:
+        except (CurrencyNotFoundError, InsufficientFundsError, ValueError) as e:
             print(f"<error> {e}")
 
     def get_rate(self, args):
@@ -136,16 +161,46 @@ class CLIInterface:
                 rates = self.rate_service.get_rates()
                 updated_at = rates.get("last_refresh", "неизвестно")
 
-                print(f"<info> Курс {from_currency}→{to_currency}: {rate:.6f} (обновлено: {updated_at})")
+                print(
+                    f"<info> Курс {from_currency}→{to_currency}: {rate:.6f} (обновлено: {updated_at})"
+                )
 
                 if rate != 0:
                     reverse_rate = 1.0 / rate
-                    print(f"<info> Обратный курс {to_currency}→{from_currency}: {reverse_rate:.6f}")
+                    print(
+                        f"<info> Обратный курс {to_currency}→{from_currency}: {reverse_rate:.6f}"
+                    )
             else:
                 print(f"<warning> Курс {from_currency}→{to_currency} недоступен.")
 
         except Exception as e:
             print(f"<error> Ошибка получения курса: {e}")
+
+    def list_currencies(self, args):
+        """Показать список валют."""
+        currencies = get_all_currencies()
+
+        print("<info> Поддерживаемые валюты:")
+        print("-" * 80)
+
+        fiats = []
+        cryptos = []
+
+        for currency in currencies.values():
+            if hasattr(currency, "issuing_country"):
+                fiats.append(currency)
+            else:
+                cryptos.append(currency)
+
+        if fiats:
+            print("\nФиатные валюты:")
+            for currency in fiats:
+                print(f"  {currency.get_display_info()}")
+
+        if cryptos:
+            print("\nКриптовалюты:")
+            for currency in cryptos:
+                print(f"  {currency.get_display_info()}")
 
     def update_rates(self, args):
         """Обновление курсов валют."""
@@ -158,7 +213,9 @@ class CLIInterface:
 
                 current_data = self.rates_storage.load_current_rates()
                 if current_data.get("last_refresh"):
-                    print(f"<info> Последнее обновление: {current_data['last_refresh']}")
+                    print(
+                        f"<info> Последнее обновление: {current_data['last_refresh']}"
+                    )
             else:
                 print("<warning> Курсы не обновлены. Проверьте логи.")
         except Exception as e:
@@ -184,23 +241,27 @@ class CLIInterface:
             else:
                 filtered_pairs = pairs
 
-            sorted_pairs = sorted(filtered_pairs.items(),
-                                key=lambda x: x[1]["rate"],
-                                reverse=True)
+            sorted_pairs = sorted(
+                filtered_pairs.items(), key=lambda x: x[1]["rate"], reverse=True
+            )
 
             if args.top:
-                sorted_pairs = sorted_pairs[:args.top]
+                sorted_pairs = sorted_pairs[: args.top]
 
-            print(f"<info> Курсы из кэша (обновлено: {current_data.get('last_refresh', 'неизвестно')}):")
+            print(
+                f"<info> Курсы из кэша (обновлено: {current_data.get('last_refresh', 'неизвестно')}):"
+            )
             for pair, data in sorted_pairs:
-                print(f"- {pair}: {data['rate']} (источник: {data.get('source', 'неизвестно')})")
+                print(
+                    f"- {pair}: {data['rate']} (источник: {data.get('source', 'неизвестно')})"
+                )
 
         except Exception as e:
             print(f"<error> Ошибка показа курсов: {e}")
 
     def _parse_input(self, user_input: str):
         """Парсинг ввода пользователя в аргументы."""
-        
+
         try:
             parts = shlex.split(user_input)
             if not parts:
@@ -222,27 +283,27 @@ class CLIInterface:
         parser = argparse.ArgumentParser(prog=command, add_help=False)
 
         if command == "register":
-            parser.add_argument('--username', required=True)
-            parser.add_argument('--password', required=True)
+            parser.add_argument("--username", required=True)
+            parser.add_argument("--password", required=True)
         elif command == "login":
-            parser.add_argument('--username', required=True)
-            parser.add_argument('--password', required=True)
+            parser.add_argument("--username", required=True)
+            parser.add_argument("--password", required=True)
         elif command == "show-portfolio":
-            parser.add_argument('--base', required=False)
+            parser.add_argument("--base", required=False)
         elif command == "buy":
-            parser.add_argument('--currency', required=True)
-            parser.add_argument('--amount', type=float, required=True)
+            parser.add_argument("--currency", required=True)
+            parser.add_argument("--amount", type=float, required=True)
         elif command == "sell":
-            parser.add_argument('--currency', required=True)
-            parser.add_argument('--amount', type=float, required=True)
+            parser.add_argument("--currency", required=True)
+            parser.add_argument("--amount", type=float, required=True)
         elif command == "get-rate":
-            parser.add_argument('--from', dest='from_currency', required=True)
-            parser.add_argument('--to', dest='to_currency', required=True)
+            parser.add_argument("--from", dest="from_currency", required=True)
+            parser.add_argument("--to", dest="to_currency", required=True)
         elif command == "update-rates":
-            parser.add_argument('--source', required=False)
+            parser.add_argument("--source", required=False)
         elif command == "show-rates":
-            parser.add_argument('--currency', required=False)
-            parser.add_argument('--top', type=int, required=False)
+            parser.add_argument("--currency", required=False)
+            parser.add_argument("--top", type=int, required=False)
         elif command == "list-currencies":
             pass
         else:
@@ -286,11 +347,11 @@ class CLIInterface:
                 if not user_input:
                     continue
 
-                if user_input.lower() in ['exit', 'quit']:
+                if user_input.lower() in ["exit", "quit"]:
                     print("<info> До свидания!")
                     break
 
-                if user_input.lower() == 'help':
+                if user_input.lower() == "help":
                     self._print_help()
                     continue
 
@@ -301,7 +362,7 @@ class CLIInterface:
                     continue
 
                 command_parts = user_input.split()
-                command = command_parts[0].replace('-', '_')
+                command = command_parts[0].replace("-", "_")
 
                 if hasattr(self, command):
                     command_method = getattr(self, command)

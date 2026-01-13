@@ -24,7 +24,7 @@ class DataManager:
             return default if default is not None else []
 
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, FileNotFoundError):
             return default if default is not None else []
@@ -32,7 +32,7 @@ class DataManager:
     def save_json(self, filename: str, data: Any):
         """Запись данных в JSON файл."""
         filepath = self._get_file_path(filename)
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
     def get_next_user_id(self) -> int:
@@ -98,10 +98,12 @@ class ExchangeRateService:
 
 def validate_currency_code(currency_code: str) -> bool:
     """Проверка валидности кода валюты."""
-    return (isinstance(currency_code, str) and
-            len(currency_code) >= 2 and
-            len(currency_code) <= 5 and
-            currency_code.isalpha())
+    return (
+        isinstance(currency_code, str)
+        and len(currency_code) >= 2
+        and len(currency_code) <= 5
+        and currency_code.isalpha()
+    )
 
 
 def validate_amount(amount: float) -> bool:

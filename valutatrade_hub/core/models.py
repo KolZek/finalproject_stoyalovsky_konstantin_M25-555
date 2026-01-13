@@ -3,11 +3,20 @@ import secrets
 from datetime import datetime
 from typing import Dict, Optional
 
+from .exceptions import InsufficientFundsError
+
 
 class User:
     """Класс пользователя."""
-    def __init__(self, user_id: int, username: str, hashed_password: str,
-                 salt: str, registration_date: datetime):
+
+    def __init__(
+        self,
+        user_id: int,
+        username: str,
+        hashed_password: str,
+        salt: str,
+        registration_date: datetime,
+    ):
         self._user_id = user_id
         self._username = username
         self._hashed_password = hashed_password
@@ -41,9 +50,11 @@ class User:
         return self._registration_date
 
     def get_user_info(self) -> str:
-        return (f"ID пользователя: {self._user_id}, "
-                f"Имя: {self._username}, "
-                f"Дата регистрации: {self._registration_date}")
+        return (
+            f"ID пользователя: {self._user_id}, "
+            f"Имя: {self._username}, "
+            f"Дата регистрации: {self._registration_date}"
+        )
 
     def change_password(self, new_password: str):
         if len(new_password) < 4:
@@ -68,22 +79,23 @@ class User:
             "username": self._username,
             "hashed_password": self._hashed_password,
             "salt": self._salt,
-            "registration_date": self._registration_date.isoformat()
+            "registration_date": self._registration_date.isoformat(),
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'User':
+    def from_dict(cls, data: dict) -> "User":
         return cls(
             user_id=data["user_id"],
             username=data["username"],
             hashed_password=data["hashed_password"],
             salt=data["salt"],
-            registration_date=datetime.fromisoformat(data["registration_date"])
+            registration_date=datetime.fromisoformat(data["registration_date"]),
         )
 
 
 class Wallet:
     """Класс кошелька."""
+
     def __init__(self, currency_code: str, balance: float = 0.0):
         self.currency_code = currency_code
         self._balance = balance
@@ -109,29 +121,23 @@ class Wallet:
         if amount <= 0:
             raise ValueError("Сумма снятия должна быть положительной")
         if amount > self._balance:
-            print("error")
-
+            raise InsufficientFundsError(self.currency_code, self._balance, amount)
         self.balance -= amount
 
     def get_balance_info(self) -> str:
         return f"{self.currency_code}: {self._balance:.4f}"
 
     def to_dict(self) -> dict:
-        return {
-            "currency_code": self.currency_code,
-            "balance": self._balance
-        }
+        return {"currency_code": self.currency_code, "balance": self._balance}
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Wallet':
-        return cls(
-            currency_code=data["currency_code"],
-            balance=data["balance"]
-        )
+    def from_dict(cls, data: dict) -> "Wallet":
+        return cls(currency_code=data["currency_code"], balance=data["balance"])
 
 
 class Portfolio:
     """Класс управления кошельками."""
+
     def __init__(self, user_id: int, wallets: Optional[Dict[str, Wallet]] = None):
         self._user_id = user_id
         self._wallets = wallets or {}
@@ -155,8 +161,9 @@ class Portfolio:
         currency_code = currency_code.upper()
         return self._wallets.get(currency_code)
 
-    def get_total_value(self, base_currency: str = 'USD',
-                       exchange_rates: Optional[Dict] = None) -> float:
+    def get_total_value(
+        self, base_currency: str = "USD", exchange_rates: Optional[Dict] = None
+    ) -> float:
         if exchange_rates is None:
             exchange_rates = {}
 
@@ -175,7 +182,7 @@ class Portfolio:
                         "BTC_USD": 59337.21,
                         "EUR_USD": 1.0786,
                         "RUB_USD": 0.01016,
-                        "ETH_USD": 3720.00
+                        "ETH_USD": 3720.00,
                     }
                     if rate_key in demo_rates:
                         total_value += wallet.balance * demo_rates[rate_key]
@@ -186,13 +193,12 @@ class Portfolio:
         return {
             "user_id": self._user_id,
             "wallets": {
-                currency: wallet.to_dict()
-                for currency, wallet in self._wallets.items()
-            }
+                currency: wallet.to_dict() for currency, wallet in self._wallets.items()
+            },
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Portfolio':
+    def from_dict(cls, data: dict) -> "Portfolio":
         wallets = {
             currency: Wallet.from_dict(wallet_data)
             for currency, wallet_data in data["wallets"].items()

@@ -68,6 +68,7 @@ class UserManager:
     @staticmethod
     def _hash_password(password: str, salt: str) -> str:
         import hashlib
+
         return hashlib.sha256((password + salt).encode()).hexdigest()
 
 
@@ -88,7 +89,9 @@ class PortfolioManager:
         self._save_portfolio(portfolio)
         return portfolio
 
-    def buy_currency(self, user_id: int, currency_code: str, amount: float) -> Dict[str, Any]:
+    def buy_currency(
+        self, user_id: int, currency_code: str, amount: float
+    ) -> Dict[str, Any]:
         """Покупка валюты."""
         if not validate_amount(amount):
             raise ValueError("Сумма должна быть положительной")
@@ -116,10 +119,12 @@ class PortfolioManager:
             "rate": rate,
             "estimated_cost": estimated_cost,
             "old_balance": old_balance,
-            "new_balance": wallet.balance
+            "new_balance": wallet.balance,
         }
 
-    def sell_currency(self, user_id: int, currency_code: str, amount: float) -> Dict[str, Any]:
+    def sell_currency(
+        self, user_id: int, currency_code: str, amount: float
+    ) -> Dict[str, Any]:
         """Продажа валюты."""
         if not validate_amount(amount):
             raise ValueError("Сумма должна быть положительной")
@@ -150,7 +155,7 @@ class PortfolioManager:
             "rate": rate,
             "estimated_revenue": estimated_revenue,
             "old_balance": old_balance,
-            "new_balance": wallet.balance
+            "new_balance": wallet.balance,
         }
 
     def _save_portfolio(self, portfolio: Portfolio):
