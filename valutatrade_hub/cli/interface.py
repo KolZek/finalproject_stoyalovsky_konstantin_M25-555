@@ -27,7 +27,7 @@ class CLIInterface:
         try:
             user = self.user_manager.register_user(args.username, args.password)
             print(
-                f"Пользователь '{user.username}' зарегистрирован (id={user.user_id})."
+                f"<info> Пользователь '{user.username}' зарегистрирован (id={user.user_id})."
             )
         except ValueError as e:
             print(f"<error> {e}")
